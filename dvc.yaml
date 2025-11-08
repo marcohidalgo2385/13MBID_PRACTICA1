@@ -16,10 +16,10 @@ stages:
   test_data_gx:
     cmd: pytest --html=docs/test_results/test_results_gx.html --self-contained-html test/test_data_gx.py
     deps:
-      - test/test_data_gx.py
-      - data/raw/bank-additional-full.csv
+    - test/test_data_gx.py
+    - data/raw/bank-additional-full.csv
     outs:
-      - docs/test_results/test_results_gx.html
+    - docs/test_results/test_results_gx.html
   preprocess_data:
     cmd: python src/data_preparation.py
     deps:

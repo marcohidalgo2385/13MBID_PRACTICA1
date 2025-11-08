@@ -1,0 +1,10 @@
+import joblib
+
+# Cargar el modelo entrenado
+model = joblib.load("models/decision_tree_model.pkl")
+
+# Revisar el tipo de modelo
+print(type(model))
+
+# Si quieres ver la profundidad o parámetros principales:
+print(model.get_params())
