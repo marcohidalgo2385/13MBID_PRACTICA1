@@ -1,0 +1,63 @@
+import pandas as pd
+from pandera.pandas import DataFrameSchema, Column
+import pytest
+
+@pytest.fixture
+def datos_banco():
+    """Fixture para cargar y limpiar los datos del banco desde un archivo CSV."""
+    df = pd.read_csv("data/raw/bank-additional-full.csv", sep=';')
+
+    # 🔹 Limpieza de datos
+    df = df.drop_duplicates()        # Eliminar filas duplicadas
+    df = df.dropna()                 # Eliminar valores nulos
+    df = df[df["age"] > 17]          # Filtrar registros con edad válida (>17)
+
+    return df
+
+def test_esquema(datos_banco):
+    """Test de esquema para el DataFrame de datos_banco.
+
+    Args:
+        datos_banco (pd.DataFrame): DataFrame que contiene los datos del banco.
+    """
+    df = datos_banco
+    esquema = DataFrameSchema({
+        "age": Column(int, nullable=False),
+        "job": Column(str, nullable=False),
+        "marital": Column(str, nullable=False),
+        "education": Column(str, nullable=False),
+        "default": Column(str, nullable=True),
+        "housing": Column(str, nullable=False),
+        "loan": Column(str, nullable=False),
+        "y": Column(str, nullable=False)
+        # TODO: completar el resto de columnas
+    })
+
+    esquema.validate(df)
+
+
+def test_basico(datos_banco):
+    """Test básico para verificar que el DataFrame de datos_banco no está vacío
+    y contiene las columnas esperadas.
+
+    Args:
+        datos_banco (pd.DataFrame): DataFrame que contiene los datos del banco.
+    """
+    df = datos_banco
+    # Verificar que el DataFrame no está vacío
+    assert not df.empty, "El DataFrame está vacío." 
+    # Verificar nulos
+    assert df.isnull().sum().sum() == 0, "El DataFrame contiene valores nulos."
+    # Verificar cantidad de columnas
+    assert df.shape[1] == 21, f"El DataFrame debería tener 21 columnas, pero tiene {df.shape[1]}."
+
+    def test_validaciones_extra(datos_banco):
+     """Validaciones adicionales sobre el DataFrame de datos_banco."""
+
+    df = datos_banco
+
+    # Verificar que no existan filas duplicadas
+    assert df.duplicated().sum() == 0, "El DataFrame contiene filas duplicadas."
+
+    # Verificar que todas las edades sean mayores a 17 años
+    assert (df["age"] > 17).all(), "Existen registros con edad menor o igual a 17 años."
