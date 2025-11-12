@@ -19,5 +19,6 @@ dependencies = [
     "scikit-learn>=1.6.1",
     "streamlit>=1.43.0",
     "streamlit-ace>=0.1.1",
+    "uvicorn>=0.38.0",
     "ydata-profiling>=4.13.0",
 ]

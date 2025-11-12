@@ -72,7 +72,8 @@ def create_preprocessor(X_train):
     numerical_columns = X_train.select_dtypes(exclude='object').columns
 
     num_pipeline = Pipeline([('RobustScaler', RobustScaler())])
-    cat_pipeline = Pipeline([('OneHotEncoder', OneHotEncoder(drop='first', sparse_output=False))])
+    # Allow the encoder to ignore unknown categories at transform time (robust for new/rare values)
+    cat_pipeline = Pipeline([('OneHotEncoder', OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore'))])
 
     preprocessor_full = ColumnTransformer([
         ('num_pipeline', num_pipeline, numerical_columns),
@@ -213,4 +214,3 @@ if __name__ == "__main__":
         preprocessor_output_path=args.preprocessor_output,
         metrics_output_path=args.metrics_output
     )
-    
