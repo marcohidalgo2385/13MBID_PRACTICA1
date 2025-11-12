@@ -13,3 +13,4 @@ great_expectations
 fastapi
 plotly
 uvicorn
+grpcio
